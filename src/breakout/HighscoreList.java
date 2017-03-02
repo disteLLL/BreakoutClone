@@ -11,9 +11,9 @@ import java.util.List;
 
 public class HighscoreList {
 	
-	private int[] scoresArray;
+	private static int[] scoresArray;
 
-	public int[] getScores (int score) {
+	public static int[] getScores (int score) {
 		
 		List<String> scores = new ArrayList<String>();	
 		
@@ -45,7 +45,7 @@ public class HighscoreList {
 		return scoresArray;
 	}
 	
-	public void writeScores () {
+	public static void writeScores () {
 		
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("resources/highscores.txt"));

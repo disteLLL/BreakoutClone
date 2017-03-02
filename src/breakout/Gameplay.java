@@ -21,8 +21,8 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 	private boolean check = false;
 	private boolean rightArrow;
 	private boolean leftArrow;
-	private int rows = 5;
-	private int cols = 8;
+	private int rows = 2;
+	private int cols = 7;
 	private int totalBricks = rows * cols;
 	private int delay = 20;
 	private int playerX = 310;
@@ -42,11 +42,10 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 	private Random random;
 	private Timer timer;
 	private MapGenerator map;
-	private HighscoreList hsl;
 
 	public Gameplay() {
 		map = new MapGenerator(rows, cols);
-		Sound.playClip("resources/1.wav");
+		Sound.playClip("resources/background.wav");
 		addKeyListener(this);
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
@@ -89,7 +88,7 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 		}
 		
 		// game over
-		if (totalBricks <= 0 || ballposY > 570) {
+		if (ballposY > 570) {
 			
 			if (scoreCheck) gameOver();
 			
@@ -109,18 +108,20 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 			ballXdir = 0;
 			ballYdir = 0;
 			g.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
-			
-			if (totalBricks<=0) {
-				g.setColor(Color.GREEN);
-				g.drawString("You Won!", 270, 300);
-			}
-			else {
-				g.setColor(Color.RED);
-				g.drawString("Game Over", 265, 300);
-			}
-
+			g.setColor(Color.RED);
+			g.drawString("Game Over", 265, 300);
 			g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 			g.drawString("Press Enter to Restart", 240, 350);
+			g.drawString("Press Space to Continue", 228, 400);
+		}
+		
+		
+		// continue
+		if (totalBricks == 0 && ballposY < 570) {
+			g.setColor(Color.WHITE);
+			g.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
+			g.drawString("Map finished!", 240, 400);
+			g.drawString("Catch the ball to continue", 165, 450);
 		}
 		
 		g.dispose();
@@ -147,6 +148,12 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 			if (ball.intersects(bar)) {
 				
 				Sound.playClip("resources/nes-10-00.wav");
+				
+				if (totalBricks == 0) {
+					rows++;
+					totalBricks = rows * cols;
+					map = new MapGenerator(rows, cols);
+				}
 
 				if (ball.intersects(barLeft)) {
 					if (ballXdir < 0 && ballXdir > -9) {
@@ -197,8 +204,8 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 						Rectangle brickRect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
 
 						if (ball.intersects(brickRect)) {
-							
-							if (random.nextInt(10)+1 > 7) {
+								
+							if (random.nextInt(10)+1 > 5) {
 								if (!check) {		
 									imageName = powerUps[random.nextInt(4)];
 									powerUpCheck(imageName);
@@ -206,8 +213,6 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 									powerUpY = ballposY;
 								}	
 							}
-							
-							
 							
 							map.setBrickValue(i, j);
 							if (map.getBrickValue(i, j) == 0) {
@@ -225,7 +230,7 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 							} else {
 								ballYdir = -ballYdir;
 							}
-
+							
 							break A;
 						}
 					}
@@ -260,27 +265,15 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			leftArrow = true;
 		}
-		
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			if (!play) {
-				play = true;
-				scoreCheck = true;
-				ballposX = 240;
-				ballposY = 220;
-				ballXdir = 3;
-				ballYdir = 6;
-				playerX = 310;
-				barWidth = 100;
-				barWidthSide = 40;
-				barRightX = 60;
-				score = 0;
-				totalBricks = rows * cols;
-				map = new MapGenerator(rows, cols);
-				delay = 20;
-				timer.stop();
-				timer = new Timer(delay, this);
-				timer.start();
-				repaint();
+			if (!play) {		
+				rows = 2;
+				reset();
+			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			if (!play) {		
+				reset();
 			}
 		}
 	}
@@ -387,10 +380,30 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 	public void gameOver() {
 		
 		scoreCheck = false;
-		hsl = new HighscoreList();
-		scores = hsl.getScores(score);
-		hsl.writeScores();
+		scores = HighscoreList.getScores(score);
+		HighscoreList.writeScores();
+	}
 	
+	public void reset() {
+		
+		play = true;
+		scoreCheck = true;
+		ballposX = 240;
+		ballposY = 220;
+		ballXdir = 3;
+		ballYdir = 6;
+		playerX = 310;
+		barWidth = 100;
+		barWidthSide = 40;
+		barRightX = 60;
+		score = 0;
+		totalBricks = rows * cols;
+		map = new MapGenerator(rows, cols);
+		delay = 20;
+		timer.stop();
+		timer = new Timer(delay, this);
+		timer.start();
+		repaint();
 	}
 		
 	@Override

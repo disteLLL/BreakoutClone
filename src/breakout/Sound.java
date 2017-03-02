@@ -26,7 +26,7 @@ public class Sound {
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			
 			
-			if (fileName.equals("resources/1.wav")) {
+			if (fileName.equals("resources/background.wav")) {
 				clip.loop(Clip.LOOP_CONTINUOUSLY);
 				gainControl.setValue(-5.f);	
 			}
