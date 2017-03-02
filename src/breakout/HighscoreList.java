@@ -18,8 +18,7 @@ public class HighscoreList {
 		List<String> scores = new ArrayList<String>();	
 		
 		try	{	
-			//inputFile = new File("highscores.txt");
-			BufferedReader reader = new BufferedReader(new FileReader("highscores.txt"));
+			BufferedReader reader = new BufferedReader(new FileReader("resources/highscores.txt"));
 			String currentLine;
 			
 			while((currentLine = reader.readLine()) != null) {
@@ -49,10 +48,9 @@ public class HighscoreList {
 	public void writeScores () {
 		
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("highscores.txt"));
+			BufferedWriter writer = new BufferedWriter(new FileWriter("resources/highscores.txt"));
 			
 			for (int i=scoresArray.length-1;i>=1;i--) {
-				System.out.println(Integer.toString(scoresArray[i]));
 				writer.write(Integer.toString(scoresArray[i]));
 				writer.newLine();
 			}
