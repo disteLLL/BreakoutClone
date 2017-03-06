@@ -219,7 +219,7 @@ public class BreakoutInterface extends JPanel implements ActionListener, KeyList
 							if (bricks.getBrickValue(i, j) == 0) {
 								Sound.playClip("resources/sfx_sounds_pause7_out.wav");
 								totalBricks--;
-								score += 25200 / (i + 1);
+								score += 25200 / (i + 1); // mehr Punkte für zerstörte Bricks weiter oben
 							}
 							// Brick hat noch "Leben"
 							else {
